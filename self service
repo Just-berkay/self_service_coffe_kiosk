@@ -1,0 +1,153 @@
+class Menü:#menü
+    def __init__(self):
+        self.Menu = {
+            'expresso': 100,
+            'latte': 100,
+            'mocha': 150,
+            'machiato': 150,
+            'filter_coffe': 120,
+            "cheesecake": 200,
+            "profiterol": 250,
+            "san_sebastian": 250,
+            "tart": 200,
+        }
+
+    def display(self):
+        pass
+
+
+class  order(Menü):#siparişimizi seçtiğimiz yer
+    def __init__(self,tür):
+        self.tür=tür
+        self.sepet = []
+    def tercih(self):
+        print("Hoşgeldiniz!")
+        print("Tatlı için 1, Kahve için 2'ye basınız, her ikisindende seçmek için 3'e basınız.")
+        self.tür = int(input("Tercihiniz nedir: "))
+
+        # Kahve seçimi
+        if self.tür == 2:
+            print("İçmek istediğiniz kahvenin numarasını giriniz:")
+            print("Expresso = no: 1, Latte = no: 2, Mocha = no: 3, Machiato = no: 4, Filter Coffee = no: 5")
+            kahvesecimi = int(input("Tercihinizi giriniz: "))
+
+            if kahvesecimi == 1:
+                self.sepet.append(("Expresso", 100))  # Kahve ve fiyatını sepet ekle
+            elif kahvesecimi == 2:
+                self.sepet.append(("Latte", 100))
+            elif kahvesecimi == 3:
+                self.sepet.append(("Mocha", 150))
+            elif kahvesecimi == 4:
+                self.sepet.append(("Machiato", 150))
+            elif kahvesecimi == 5:
+                self.sepet.append(("Filter Coffee", 120))
+
+        # Tatlı seçimi
+        elif self.tür == 1:
+            print("Yemek istediğiniz tatlının numarasını giriniz:")
+            print("Cheesecake = no: 21, Profiterol = no: 22, San Sebastian = no: 23, Tart = no: 24")
+            tatlisecimi = int(input("Tercihinizi giriniz: "))
+
+            if tatlisecimi == 21:
+                self.sepet.append(("Cheesecake", 200))
+            elif tatlisecimi == 22:
+                self.sepet.append(("Profiterol", 250))
+            elif tatlisecimi == 23:
+                self.sepet.append(("San Sebastian", 250))
+            elif tatlisecimi == 24:
+                self.sepet.append(("Tart", 200))
+
+        elif self.tür == 3:
+            # Hem kahve hem tatlı seçimi
+            print("İlk olarak kahvenizi seçin.")
+            print("Expresso = no: 1, Latte = no: 2, Mocha = no: 3, Machiato = no: 4, Filter Coffee = no: 5")
+            kahvesecimi = int(input("Tercihinizi giriniz: "))
+
+            if kahvesecimi == 1:
+                self.sepet.append(("Expresso", 100))
+            elif kahvesecimi == 2:
+                self.sepet.append(("Latte", 100))
+            elif kahvesecimi == 3:
+                self.sepet.append(("Mocha", 150))
+            elif kahvesecimi == 4:
+                self.sepet.append(("Machiato", 150))
+            elif kahvesecimi == 5:
+                self.sepet.append(("Filter Coffee", 120))
+
+            print("Şimdi tatlı seçin.")
+            print("Cheesecake = no: 21, Profiterol = no: 22, San Sebastian = no: 23, Tart = no: 24")
+            tatlisecimi = int(input("Tercihinizi giriniz: "))
+
+            if tatlisecimi == 21:
+                self.sepet.append(("Cheesecake", 200))
+            elif tatlisecimi == 22:
+                self.sepet.append(("Profiterol", 250))
+            elif tatlisecimi == 23:
+                self.sepet.append(("San Sebastian", 250))
+            elif tatlisecimi == 24:
+                self.sepet.append(("Tart", 200))
+
+    def Sepet(self):
+        toplam_fiyat = 0
+        print("Sepetiniz:")
+        for item, fiyat in self.sepet:
+            print(f"{item} - {fiyat} TL")  #  fiyatını yazdır
+            toplam_fiyat += fiyat  # Toplam fiyat
+
+        print(f"Ödenecek tutar: {toplam_fiyat} TL.")
+
+#admin sifre sorgulaması
+def admin_auth(func):
+    def wrapper(self, *args, **kwargs):
+        admin_sifre = "admin123"
+        sifre = input("Admin girişi için şifreyi giriniz: ")
+        if sifre == admin_sifre:
+            return func(self, *args, **kwargs)
+        else:
+            print("Hatalı şifre! Admin paneline giriş engellendi.")
+    return wrapper
+
+class AdminSetup(Menü):#admin paneli işlemleri
+        def __init__(self):
+            super().__init__()
+
+        @admin_auth
+        def display(self):
+            print("----ADMIN PANEL----")
+            print("1. Menü fiyatlarını güncelle")
+            print("2. Yeni ürün ekle")
+            secim = int(input("Seçiminizi yapınız: "))
+
+            if secim == 1:
+                print("Menü fiyatlarını güncelle:")
+                for Menu in self.Menu:
+                    print(f"{Menu}: {self.Menu[Menu]} TL")
+                Menu_adi = input("Fiyatını güncellemek istediğiniz ürünün adını giriniz: ")
+                if Menu_adi in self.Menu:
+                    yeni_fiyat = int(input(f"Yeni fiyatı giriniz ({Menu_adi}): "))
+                    self.Menu[Menu_adi] = yeni_fiyat
+                    print(f"{Menu_adi} fiyatı {yeni_fiyat} TL olarak güncellendi.")
+                else:
+                    print("Hatalı ürün adı girdiniz!")
+
+            elif secim == 2:
+                yeni_urun = input("Eklemek istediğiniz ürünün adını giriniz: ")
+                yeni_fiyat = int(input(f"{yeni_urun} için fiyat giriniz: "))
+                self.Menu[yeni_urun] = yeni_fiyat
+                print(f"{yeni_urun} menüye {yeni_fiyat} TL olarak eklendi.")
+
+
+a = int(input("Admin girişi için 1, Menü için 2 tuşuna basınız: "))
+menu = Menü()
+admin = AdminSetup()
+
+if a == 1:
+    admin.display()
+elif a == 2:
+    order_instance = order(0)
+    order_instance.tercih()
+    order_instance.Sepet()
+else:
+    print("Yanlış giriş.")
+
+
